@@ -12,12 +12,12 @@ jobs:
     name: Update Flyte components
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: "0"
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: "1.22"
+          go-version: "1.26.10"
       - name: Update references
         env:
           VERSION: ${{ github.event.inputs.next-version }}
@@ -26,7 +26,7 @@ jobs:
           make helm
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672 # v3
         with:
           token: ${{ secrets.FLYTE_BOT_PAT }}
           commit-message: Update Flyte Components
