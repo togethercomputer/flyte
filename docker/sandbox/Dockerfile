@@ -1,4 +1,4 @@
-FROM alpine:3.13.5 AS base
+FROM alpine:3.22 AS base
 
 # Install dependencies
 RUN apk add --no-cache openssl
@@ -40,7 +40,7 @@ COPY charts/flyte-deps/ /flyteorg/share/flyte-deps
 # Copy scripts
 COPY docker/sandbox/kubectl docker/sandbox/cgroup-v2-hack.sh docker/sandbox/wait-for-flyte.sh /flyteorg/bin/
 
-FROM docker:20.10.14-dind-alpine3.15 AS dind
+FROM docker:28.5.2-dind-alpine3.22 AS dind
 
 # Install dependencies
 RUN apk add --no-cache bash git make tini curl jq
