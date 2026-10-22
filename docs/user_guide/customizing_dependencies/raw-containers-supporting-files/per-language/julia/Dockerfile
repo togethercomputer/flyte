@@ -1,4 +1,4 @@
-FROM julia:1.6.7-bookworm
+FROM julia:1.10.12-trixie
 
 WORKDIR /root
 
