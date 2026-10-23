@@ -1,4 +1,4 @@
-FROM julia:1.6.4-buster
+FROM julia:1.10.12-trixie
 
 WORKDIR /root
 

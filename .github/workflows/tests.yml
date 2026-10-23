@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: "1.22"
+          go-version: "1.26.10"
+          cache: false
       - name: Compile
         run: make compile
       - name: Run tests
@@ -29,17 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch flyte code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           path: flyte
       - name: 'Clear action cache'
         uses: ./flyte/.github/actions/clear-action-cache
       - name: Fetch flytekit code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           repository: flyteorg/flytekit
           path: flytekit
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@fc2d68f6413eb2d87b895e92f8584b5b94a10167 # v3
         with:
           auto-update-conda: true
           python-version: 3.9
@@ -66,7 +67,7 @@ jobs:
           conda config --show
           printenv | sort
       - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v1
+        uses: ts-graphviz/setup-graphviz@c001ccfb5aff62e28bda6a6c39b59a7e061be5b9 # v1
       - name: Build the documentation
         working-directory: ${{ github.workspace }}/flyte
         shell: bash -el {0}
@@ -80,9 +81,10 @@ jobs:
   generate_helm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: "1.22"
+          go-version: "1.26.10"
+          cache: false
       - name: Helm and diff
         run: DELTA_CHECK=true make helm

@@ -11,7 +11,7 @@ on:
       - master
       - 'release-v**'
 env:
-  GO_VERSION: "1.22"
+  GO_VERSION: "1.26.10"
   PRIORITIES: "P0"
 jobs:
   unpack-envvars:
@@ -125,14 +125,15 @@ jobs:
       - unpack-envvars
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: "0"
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
         with:
           go-version: ${{ needs.unpack-envvars.outputs.go-version }}
+          cache: false
       - name: Run GoReleaser dry run
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@5742e2a039330cbb23ebf35f046f814d4c6ff811 # v5
         with:
           distribution: goreleaser-pro
           version: latest
@@ -149,19 +150,14 @@ jobs:
     needs:
       - unpack-envvars
     steps:
-      - uses: insightsengineering/disk-space-reclaimer@v1
+      - uses: insightsengineering/disk-space-reclaimer@dae9fabcb8febe09f6585471948acf9dc9a57489 # v1
       - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+        uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
         with:
           go-version: ${{ needs.unpack-envvars.outputs.go-version }}
+          cache: false
       - name: Build Flytectl binary
         run: make compile
       - name: Create a sandbox cluster

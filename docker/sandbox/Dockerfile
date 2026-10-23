@@ -1,4 +1,4 @@
-FROM alpine:3.13.5 AS base
+FROM alpine:3.22.7 AS base
 
 # Install dependencies
 RUN apk add --no-cache openssl
@@ -40,10 +40,15 @@ COPY charts/flyte-deps/ /flyteorg/share/flyte-deps
 # Copy scripts
 COPY docker/sandbox/kubectl docker/sandbox/cgroup-v2-hack.sh docker/sandbox/wait-for-flyte.sh /flyteorg/bin/
 
-FROM docker:20.10.14-dind-alpine3.15 AS dind
+# Docker engine comes from the Alpine 3.22 repo (28.3.x, still patched by Alpine)
+# instead of the docker:28.x-dind image, which is no longer rebuilt. Docker 29
+# raises the minimum API version to 1.44 and would break the k3s v1.21
+# dockershim client, so we stay on 28. The entrypoint runs dockerd directly.
+FROM alpine:3.22.7 AS dind
 
-# Install dependencies
-RUN apk add --no-cache bash git make tini curl jq
+# Install dependencies (docker engine/cli plus what docker:dind ships for dockerd)
+RUN apk add --no-cache docker iptables ip6tables e2fsprogs xfsprogs pigz xz openssl ca-certificates \
+    bash git make tini curl jq
 
 # Copy artifacts from base
 COPY --from=base /flyteorg/ /flyteorg/
@@ -60,7 +65,8 @@ ENV FLYTE_TEST="${FLYTE_TEST}"
 # Update PATH variable
 ENV PATH="/flyteorg/bin:${PATH}"
 
-# Declare volumes for k3s
+# Declare volumes for dockerd (the docker:dind image declared this) and k3s
+VOLUME /var/lib/docker
 VOLUME /var/lib/kubelet
 VOLUME /var/lib/rancher/k3s
 VOLUME /var/lib/cni
